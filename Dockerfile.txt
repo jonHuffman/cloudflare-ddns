@@ -1,0 +1,20 @@
+FROM alpine:latest
+
+# Install curl
+RUN apk add --no-cache curl
+
+# Build our script into the docker image
+COPY cloudflareDDNS.sh /usr/local/bin/cloudflareDDNS.sh
+RUN chmod +x /usr/local/bin/cloudflareDDNS.sh
+
+# Define variables used by this tool
+ENV SLEEP_DURATION=86400
+ENV ZONE_ID="zone-id"
+ENV RECORD_ID="domain-record-id"
+ENV API_TOKEN="api-token"
+ENV DOMAIN="example.com"
+ENV TYPE="A"
+ENV PROXIED="true"
+
+# Run the shell command on starting this container
+ENTRYPOINT ["/bin/sh", "-c", "while :; do /usr/local/bin/cloudflareDDNS.sh; sleep $SLEEP_DURATION; done"]
